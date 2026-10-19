@@ -12,7 +12,7 @@
 char bin[9];
 
 static void setBit(const char val, const int start, const int end);
-static void findArgs(const char *asm_str, const char *op);
+static bool findArgs(const char *asm_str, const char *op);
 static void findCommand(const char *asm_str, char op[6]);
 static char *ntob(int num);
 
@@ -43,7 +43,6 @@ void asmtobin(const char *asm_str, FILE *output, const char type)
     char op[6] = {0};
     findCommand(asm_str, op);
 
-    findArgs(asm_str, op);
     if (type == 'b')
         fprintf(output, "%s\n", bin);
     else if (type == 'h')
@@ -81,10 +80,10 @@ static void findCommand(const char *asm_str, char op[6])
     else op[0] = '\0';
 }
 
-static void findArgs(const char *asm_str, const char *op)
+static bool findArgs(const char *asm_str, const char *op)
 {
     if (strcmp(op, "MOV") != 0 && strcmp(op, "SET") != 0 && strcmp(op, "LOOP") !=0)
-        return;
+        return true;
 
     char args[64];
     snprintf(args, sizeof(args), "%s", asm_str);
@@ -96,21 +95,27 @@ static void findArgs(const char *asm_str, const char *op)
     if (strcmp(op, "LOOP") == 0)
     {
         if (val == NULL || loc == NULL)
-            return;
+            return false;
 
-        int cloop = atoi(val);
-        int sloop = atoi(loc);
+        char *end_c, *end_s;
+        long cloop = strtol(val, &end_c, 10);
+        long sloop = strtol(loc, &end_s, 10);
 
-        if (cloop < 0 || cloop > 7 || sloop < 0 || sloop > 7)
-            return;
+        if (*end_c != '\0' || *end_s != '\0')
+            return false;
 
-        char *bin_c = ntob(cloop);
-        char *bin_s = ntob(sloop);
+        if (cloop < 0 || cloop > 7 || sloop < 0 || sloop > 6)
+            return false;
+
+        int cl = (int)cloop, sl = (int)sloop + 1;
+
+        char *bin_c = ntob(cl);
+        char *bin_s = ntob(sl);
         if (bin_c == NULL || bin_s == NULL)
         {
             free(bin_c);
             free(bin_s);
-            return;
+            return false;
         }
 
         bin[0] = bin_c[sizeof(int) * 8 - 3];
@@ -124,7 +129,7 @@ static void findArgs(const char *asm_str, const char *op)
         free(bin_c);
         free(bin_s);
 
-        return;
+        return true;
     }
 
     if (strcmp(op, "SET") == 0)
@@ -137,7 +142,7 @@ static void findArgs(const char *asm_str, const char *op)
 
         bin[0] = ((loc[0] - '0') & 2) ? '1' : '0';
         bin[1] = ((loc[0] - '0') & 1) ? '1' : '0';
-        return;
+        return true;
     }
     if (strcmp(op, "LOOP") != 0)
     {
@@ -151,6 +156,7 @@ static void findArgs(const char *asm_str, const char *op)
         else if (strcmp(loc, "MAR") == 0) mar('d');
         else if (strcmp(loc, "ACC") == 0) acc('d');
     }
+    return true;
 }
 
 char *ntob(int n) 
