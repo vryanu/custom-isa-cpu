@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "headers/asmtobin.h"
 
+#define EDIT_BIN(b, n) bin[b] = n 
+
 #define MOV_BIT   2
 #define LOAD_BIT  3
 #define STORE_BIT 4
@@ -11,24 +13,23 @@
 
 char bin[9];
 
-static void setBit(const char val, const int start, const int end);
 static bool findArgs(const char *asm_str, const char *op);
 static void findCommand(const char *asm_str, char op[6]);
 static char *ntob(int num);
 
-static inline void op_add(){ setBit('0', 6, 8); }
-static inline void op_sub(){ setBit('1', 8, 8); }
-static inline void op_mul(){ setBit('1', 7, 7); }
-static inline void op_div(){ setBit('1', 7, 8); }
-static inline void op_mod(){ setBit('1', 6, 6); }
-static inline void op_and(){ bin[5] = '1'; bin[7] = '1'; }
-static inline void op_or(){ setBit('1', 6, 7); }
-static inline void op_xor(){ setBit('1', 6, 8); }
-static inline void op_load(){ setBit('1', LOAD_BIT + 1, LOAD_BIT + 1); }
-static inline void op_store(){ setBit('1', STORE_BIT + 1, STORE_BIT + 1); }
-static inline void op_mov(){ setBit('1', MOV_BIT + 1, MOV_BIT + 1); }
-static inline void op_set(){ op_mov(); setBit('1', SET_BIT + 1, SET_BIT + 1); }
-static inline void op_loop(){ bin[LOAD_BIT] = '1', bin[STORE_BIT] = '1'; }
+static inline void op_add(){ EDIT_BIN(6, '0'), EDIT_BIN(7, '0'), EDIT_BIN(8, '0'); }
+static inline void op_sub(){ EDIT_BIN(8, '1'); }
+static inline void op_mul(){ EDIT_BIN(7, '1'); }
+static inline void op_div(){ EDIT_BIN(8, '1'), EDIT_BIN(7, '1'); }
+static inline void op_mod(){ EDIT_BIN(6, '1'); }
+static inline void op_and(){ EDIT_BIN(5, '1'), EDIT_BIN(7, '1'); }
+static inline void op_or(){ EDIT_BIN(6, '1'), EDIT_BIN(7, '1'); }
+static inline void op_xor(){ EDIT_BIN(6, '1'), EDIT_BIN(7, '1'), EDIT_BIN(8, '1'); }
+static inline void op_load(){ EDIT_BIN(LOAD_BIT, '1'); }
+static inline void op_store(){ EDIT_BIN(STORE_BIT, '1'); }
+static inline void op_mov(){ EDIT_BIN(MOV_BIT, '1'); }
+static inline void op_set(){ op_mov(); EDIT_BIN(SET_BIT, '1'); }
+static inline void op_loop(){ op_load(); op_store(); }
 
 static inline void regb(char pos){if (pos == 'u') { bin[0] = '0'; bin[1] = '0'; } else { bin[6] = '0'; bin[7] = '0'; }}
 static inline void rega(char pos){if (pos == 'u') { bin[0] = '0'; bin[1] = '1'; } else { bin[6] = '0'; bin[7] = '1'; }}
@@ -43,16 +44,22 @@ void asmtobin(const char *asm_str, FILE *output, const char type)
     char op[6] = {0};
     findCommand(asm_str, op);
 
+    if (op[0] == '\0')
+    {
+        fprintf(stderr, "Unknown command\n");
+        return;
+    }
+
+    if (!findArgs(asm_str, op))
+    {
+        fprintf(stderr, "Invalid Argument %s\n", op);
+        return;
+    }
+
     if (type == 'b')
         fprintf(output, "%s\n", bin);
     else if (type == 'h')
         fprintf(output, "%lX\n", strtol(bin, NULL, 2));
-}
-
-static void setBit(const char val, const int start, const int end)
-{
-    for (int i = start; i <= end; i++)
-        bin[i - 1] = val;
 }
 
 static void findCommand(const char *asm_str, char op[6])
