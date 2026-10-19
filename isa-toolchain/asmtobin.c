@@ -31,10 +31,10 @@ static inline void op_mov(){ EDIT_BIN(MOV_BIT, '1'); }
 static inline void op_set(){ op_mov(); EDIT_BIN(SET_BIT, '1'); }
 static inline void op_loop(){ op_load(); op_store(); }
 
-static inline void regb(char pos){if (pos == 'u') { bin[0] = '0'; bin[1] = '0'; } else { bin[6] = '0'; bin[7] = '0'; }}
-static inline void rega(char pos){if (pos == 'u') { bin[0] = '0'; bin[1] = '1'; } else { bin[6] = '0'; bin[7] = '1'; }}
-static inline void mar(char pos){if (pos == 'u') { bin[0] = '1'; bin[1] = '0'; } else { bin[6] = '1'; bin[7] = '0'; }}
-static inline void acc(char pos){if (pos == 'u') { bin[0] = '1'; bin[1] = '1'; } else { bin[6] = '1'; bin[7] = '1'; }}
+static inline void regb(char pos){if (pos == 'u') { EDIT_BIN(0, '0'); EDIT_BIN(1, '0'); } else { EDIT_BIN(6, '0'); EDIT_BIN(7, '0'); }}
+static inline void rega(char pos){if (pos == 'u') { EDIT_BIN(0, '0'); EDIT_BIN(1, '1'); } else { EDIT_BIN(6, '0'); EDIT_BIN(7, '1'); }}
+static inline void mar(char pos){if (pos == 'u') { EDIT_BIN(0, '1'); EDIT_BIN(1, '1'); } else { EDIT_BIN(6, '1'); EDIT_BIN(7, '0'); }}
+static inline void acc(char pos){if (pos == 'u') { EDIT_BIN(0, '1'); EDIT_BIN(1, '1'); } else { EDIT_BIN(6, '1'); EDIT_BIN(7, '1'); }}
 
 void asmtobin(const char *asm_str, FILE *output, const char type)
 {
