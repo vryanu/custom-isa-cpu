@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 4)
     {
-        printf("./translator type, input.txt, output.txt\n");
+        printf("./main <type> <input.txt> <output.txt>\n");
         return 1;
     }
     char *type = argv[1];
