@@ -1,0 +1,11 @@
+* Initialize variables
+SET REGA 1
+
+* Start the loop
+ADD
+STORE
+LOAD
+MOV ACC MAR
+MOV ACC REGB
+LOOP 5 5 * Iterate last 5 commands 5 times
+

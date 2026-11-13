@@ -1,0 +1,275 @@
+* Add 2 matrices together
+
+* Let address 00 reserved for higher MAR count
+SET REGA 3
+SET REGB 1
+SET MAR 0
+ADD
+STORE
+* 4 in 00
+
+* Initialize martrices
+* [1,2] [4,3] = [5,5] Uses addresses [01,02] [04,05] = [13,14]
+* [3,4] [2,1]   [5,5]                [07,08] [10,11] = [19,20]
+
+* Set [1,2] in [01,02]
+SET MAR 1
+SET REGA 1
+SET REGB 0
+ADD * = 1
+STORE
+LOAD
+MOV ACC REGB
+SET MAR 2
+ADD * = 2
+STORE
+
+* Set [4,3] in [04,05]
+SET REGA 2
+SET REGB 2
+SET MAR 0 * 4 is currently in MAR
+LOAD
+MOV ACC MAR
+ADD * = 4
+STORE * 4 in 04
+
+* Incrementing MAR
+SET MAR 0
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD * = 5
+STORE * 5 in 00
+
+SET REGA 2
+LOAD
+MOV ACC MAR
+ADD * = 3
+STORE * 3 in 05
+* First row complete [1,2] [4,3]
+
+* Set [3,4] in [07,08]
+SET MAR 0
+LOAD
+MOV ACC REGA
+ADD
+STORE
+LOAD
+MOV ACC REGA
+ADD
+STORE
+* 7 in 00
+SET REGA 2
+LOAD
+MOV ACC MAR
+ADD
+STORE * 3 in 07
+* Increment MAR
+SET MAR 0
+LOAD
+MOV ACC REGA
+ADD
+STORE * 8 in 00
+LOAD
+MOV ACC MAR
+SET REGA 2
+SET REGB 2
+ADD
+STORE * 4 in 08
+
+* Set [2,1] in [10,11]
+SET REGB 1
+SET MAR 0
+* Set MAR to 10
+SET MAR 0
+LOAD
+MOV ACC REGA
+SET REGB 2
+ADD
+STORE
+* 10 in 00
+SET REGB 1
+LOAD
+MOV ACC MAR
+SET REGA 1
+ADD * = 2
+STORE * 2 in 10
+* Increment MAR
+SET MAR 0
+LOAD
+MOV ACC REGA
+ADD * = 11
+STORE * 11 in 00
+LOAD
+MOV ACC MAR
+SET REGA 1
+MUL * = 1
+STORE * 1 in 11
+* Second row complete [3,4] [2,1]
+
+* Current
+* 11 [1,2] [4,3]
+*    [3,4] [2,1]
+
+* Set [01 + 04] & [02 + 05] ([5,5]) in [13,14]
+SET MAR 0
+LOAD
+MOV ACC REGA
+SET REGB 2
+ADD
+STORE * 13
+
+* Let address 03 reserved for second higher MAR count
+* [01 + 04]
+SET REGA 2
+SET MAR 3
+ADD
+STORE
+SET MAR 1
+LOAD
+MOV ACC REGA
+SET MAR 3
+LOAD
+MOV ACC MAR
+LOAD
+MOV ACC REGB
+SET MAR 0
+LOAD
+MOV ACC MAR
+ADD
+STORE
+* 5 in 13
+
+* [02 + 05]
+SET REGB 1
+SET MAR 3
+LOAD
+MOV ACC REGA
+ADD
+STORE * 5
+
+SET MAR 0
+LOAD
+MOV ACC REGA
+ADD
+STORE * 14
+SET MAR 2
+LOAD
+MOV ACC REGA
+SET MAR 3
+LOAD
+MOV ACC MAR
+LOAD
+MOV ACC REGB
+SET MAR 0
+LOAD
+MOV ACC MAR
+ADD
+STORE
+* [5] in 14
+
+* Set [07 + 10] & [08 + 11] ([5,5]) in [13,14]
+SET MAR 0
+SET REGB 3
+LOAD
+MOV ACC REGA
+ADD
+STORE
+LOAD
+MOV ACC REGA
+SET REGB 2
+ADD
+STORE * 19
+
+* [07 + 10]
+SET MAR 3
+LOAD
+MOV ACC REGA
+ADD
+STORE * 7
+LOAD
+MOV ACC REGA
+MOV ACC MAR
+SET REGB 3
+ADD
+LOAD
+SET MAR 3
+STORE
+MOV ACC REGA
+LOAD
+MOV ACC MAR
+LOAD
+MOV ACC REGB
+SET MAR 0
+LOAD
+MOV ACC MAR
+ADD
+STORE
+
+* 20 IN 00
+SET MAR 0
+SET REGB 1
+MOV ACC REGA
+ADD
+STORE * 20
+
+* [08 + 11]
+SET MAR 3
+LOAD
+MOV ACC REGA
+ADD
+STORE * 11
+SET REGB 2
+LOAD
+SUB
+STORE * 8
+MOV ACC MAR
+LOAD
+MOV ACC REGA
+SET MAR 3
+LOAD
+MOV ACC MAR
+LOAD
+MOV ACC REGB
+SET MAR 0
+LOAD
+MOV ACC MAR
+ADD
+STORE
+* Done final output: 
+*                   [1, 2]  [4, 3]
+*                   [3, 4]  [2, 1]
+*                   [5, 5]
+*                   [5, 5]
+
+* Reset variables and MAR counts
+SET REGA 0
+SET REGB 0
+SET MAR 0
+ADD
+STORE
+SET MAR 3
+STORE
+SET MAR 0
+
+* Exit the program
+END
+END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
