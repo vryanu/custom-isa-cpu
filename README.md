@@ -24,5 +24,8 @@ LOOP [3 BITS ITERATIONS][2 BITS ENABLE][3 BITS JUMP BACK AMOUNT]
 * STORE stores a value at the selected address
 * LOAD loads a value at the selected address
 * LOOP [Iterations] [Jump back] Loops a segment of code
+* LOOP [i] [7] will print on every iteration
+
+<img width="334" height="205" alt="hello-world" src="https://github.com/user-attachments/assets/9b7af1dd-dd15-43a3-8152-46aae2a7dbbe" />
 
 [Examples](examples/)
