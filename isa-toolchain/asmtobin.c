@@ -17,14 +17,14 @@ static bool findArgs(const char *asm_str, const char *op);
 static void findCommand(const char *asm_str, char op[6]);
 static char *ntob(int num);
 
-static inline void op_add(){ EDIT_BIN(6, '0'), EDIT_BIN(7, '0'), EDIT_BIN(8, '0'); }
-static inline void op_sub(){ EDIT_BIN(8, '1'); }
-static inline void op_mul(){ EDIT_BIN(7, '1'); }
-static inline void op_div(){ EDIT_BIN(8, '1'), EDIT_BIN(7, '1'); }
-static inline void op_mod(){ EDIT_BIN(6, '1'); }
-static inline void op_and(){ EDIT_BIN(5, '1'), EDIT_BIN(7, '1'); }
-static inline void op_or(){ EDIT_BIN(6, '1'), EDIT_BIN(7, '1'); }
-static inline void op_xor(){ EDIT_BIN(6, '1'), EDIT_BIN(7, '1'), EDIT_BIN(8, '1'); }
+static inline void op_add(){ EDIT_BIN(5,'0'), EDIT_BIN(6,'0'), EDIT_BIN(7,'0'); }
+static inline void op_sub(){ EDIT_BIN(7,'1'); }
+static inline void op_mul(){ EDIT_BIN(6,'1'); }
+static inline void op_div(){ EDIT_BIN(6,'1'), EDIT_BIN(7,'1'); }
+static inline void op_mod(){ EDIT_BIN(5,'1'); }
+static inline void op_and(){ EDIT_BIN(5,'1'), EDIT_BIN(7,'1'); }
+static inline void op_or(){ EDIT_BIN(5,'1'), EDIT_BIN(6,'1'); }
+static inline void op_xor(){ EDIT_BIN(5,'1'), EDIT_BIN(6,'1'), EDIT_BIN(7,'1'); }
 static inline void op_load(){ EDIT_BIN(LOAD_BIT, '1'); }
 static inline void op_store(){ EDIT_BIN(STORE_BIT, '1'); }
 static inline void op_mov(){ EDIT_BIN(MOV_BIT, '1'); }

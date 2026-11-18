@@ -1,11 +1,1 @@
-* Initialize variables
-SET REGA 1
-
-* Start the loop
-ADD
-STORE
-LOAD
-MOV ACC MAR
-MOV ACC REGB
-LOOP 5 5 * Iterate last 5 commands 5 times
-
+* 72 101 108 108 111 44 32 87 111 114 108 100 33

@@ -1,0 +1,249 @@
+* "Hello, World!"
+* nums 72 101 108 108 111 44 32 87 111 114 108 100 33
+* 00 as select
+
+* Put values in RAM
+SET REGA 2
+SET REGB 2
+ADD
+SET MAR 0
+STORE * counter in 00 = 4
+SET MAR 1
+SET REGA 3
+MUL
+STORE
+LOAD
+MOV ACC REGA
+MUL
+STORE
+LOAD
+MOV ACC REGB
+MUL
+STORE * 72 ('H') at 01
+SET MAR 2
+SET REGB 3
+STORE
+LOAD
+MOV ACC REGA
+SUB
+STORE
+LOAD
+MOV ACC REGB
+MUL
+SET REGB 3
+STORE
+LOAD
+MOV ACC REGA
+SUB
+STORE * 101 ('e') at 02
+SET MAR 3
+SET REGB 3
+SET REGA 2
+MUL
+STORE
+LOAD
+MOV ACC REGA
+MUL
+STORE
+LOAD
+MOV ACC REGB
+MUL
+STORE * 108 ('l') at 03
+SET MAR 0
+LOAD
+MOV ACC MAR * MAR = 4 (ACC still holds 108)
+STORE * 108 ('l') at 04
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 5
+LOAD
+MOV ACC MAR * MAR = 5
+MOV ACC REGA
+MOV ACC REGB
+MUL
+STORE
+LOAD
+MOV ACC REGA
+MOV ACC REGB
+MUL
+SET REGB 2
+STORE
+LOAD
+MOV ACC REGA
+SUB
+STORE * 111 ('o') at 05
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 6
+LOAD
+MOV ACC MAR * MAR = 6
+SET REGB 3
+MUL
+STORE
+LOAD
+MOV ACC REGB
+ADD
+STORE
+LOAD
+MOV ACC REGA
+MUL
+STORE * 44 (',') at 06
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 7
+LOAD
+MOV ACC MAR * MAR = 7
+SUB
+STORE
+LOAD
+MOV ACC REGB
+MUL
+SET REGA 2
+STORE
+LOAD
+MOV ACC REGB
+ADD
+STORE * 32 (' ') at 07
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 8
+LOAD
+MOV ACC MAR * MAR = 8
+MUL
+STORE
+LOAD
+MOV ACC REGB
+MUL
+STORE
+LOAD
+MOV ACC REGB
+MUL
+STORE * 87 ('W') at 08
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 9
+LOAD
+MOV ACC MAR * MAR = 9
+SET REGA 3
+MOV ACC REGB
+ADD
+STORE
+LOAD
+MOV ACC REGA
+MUL
+SET REGA 3
+STORE
+LOAD
+MOV ACC REGB
+ADD
+STORE * 111 ('o') at 09
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 10
+LOAD
+MOV ACC MAR * MAR = 10
+MOV ACC REGB
+ADD
+SET REGB 3
+STORE
+LOAD
+MOV ACC REGA
+MUL
+SET REGA 2
+STORE
+LOAD
+MOV ACC REGB
+MUL
+STORE * 114 ('r') at 10
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 11
+LOAD
+MOV ACC MAR * MAR = 11
+MOV ACC REGB
+MUL
+SET REGB 2
+STORE
+LOAD
+MOV ACC REGA
+SUB
+STORE * 108 ('l') at 11
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 12
+LOAD
+MOV ACC MAR * MAR = 12
+SUB
+STORE
+LOAD
+MOV ACC REGA
+MOV ACC REGB
+MUL
+STORE * 100 ('d') at 12
+SET MAR 0 * counter step: MAR = next address
+LOAD
+MOV ACC REGA
+SET REGB 1
+ADD
+STORE * counter in 00 = 13
+LOAD
+MOV ACC MAR * MAR = 13
+SUB
+SET REGA 3
+STORE
+LOAD
+MOV ACC REGB
+MUL
+STORE * 33 ('!') at 13
+SET REGA 0
+SET REGB 1
+ADD * ACC = 1
+SET MAR 0
+STORE * pointer in 00 = 1 (REGB stays 1)
+
+* PRINT
+
+LOAD * out = pointer
+MOV ACC REGA * REGA = pointer
+MOV ACC MAR * MAR = pointer
+LOAD * glitch makes this print idk why but it works
+ADD * ACC = pointer+1
+SET MAR 0
+STORE * pointer in 00 += 1
+LOOP 7 6 * repeat the last 7 commands, 7 runs total
+
+*SECOND LOOP
+
+LOAD * out = pointer
+MOV ACC REGA * REGA = pointer
+MOV ACC MAR * MAR = pointer
+LOAD * print
+ADD * ACC = pointer+1
+SET MAR 0
+STORE * pointer in 00 += 1
+LOOP 6 6 * repeat the last 7 commands, 6 runs total
+END

@@ -19,7 +19,6 @@ Proper BIN syntax:
 ART [5 BITS 0] [3 BITS OP]
 RAM [2 BITS MOV/SET VAL] [MOV] [LOAD] [STORE] [SET (REQUIRES MOV)] [2 BITS MOV/SET LOC]
 LOOP [3 BITS AMOUNT][2 BITS ENABLE] [3 BITS SUBTRACT FROM COUNT] */
-
 void bintoasm(const char *binary_str, FILE *output);
 
 #endif
