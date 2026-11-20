@@ -15,8 +15,6 @@ RAM [00 MOV/SET VAL][MOV][LOAD][STORE][SET][00 MOV/SET LOC]
 
 LOOP [3 BITS ITERATIONS][2 BITS ENABLE][3 BITS JUMP BACK AMOUNT]
 
-PRINT [3 BITS 0][ENABLE BIT][0][ENABLE BIT][2 BITS VAL]
-
 * ACC acts as RAM output when used as a val
 * MOV must be 1 for SET to be used
 
@@ -26,6 +24,8 @@ PRINT [3 BITS 0][ENABLE BIT][0][ENABLE BIT][2 BITS VAL]
 * STORE stores a value at the selected address
 * LOAD loads a value at the selected address
 * LOOP [Iterations] [Jump back] Loops a segment of code
-* PRINT [Val] Prints the value as an ASCII char
+* LOOP [i] [7] will print on every iteration
+
+<img width="334" height="205" alt="hello-world" src="https://github.com/user-attachments/assets/9b7af1dd-dd15-43a3-8152-46aae2a7dbbe" />
 
 [Examples](examples/)
