@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include "headers/asmtobin.h"
@@ -13,7 +12,7 @@
 
 char bin[9];
 
-static bool findArgs(const char *asm_str, const char *op);
+static int findArgs(const char *asm_str, const char *op);
 static void findCommand(const char *asm_str, char op[6]);
 static char *ntob(int num);
 
@@ -30,6 +29,7 @@ static inline void op_store(){ EDIT_BIN(STORE_BIT, '1'); }
 static inline void op_mov(){ EDIT_BIN(MOV_BIT, '1'); }
 static inline void op_set(){ op_mov(); EDIT_BIN(SET_BIT, '1'); }
 static inline void op_loop(){ op_load(); op_store(); }
+static inline void op_print(){ op_load(); EDIT_BIN(SET_BIT, '1'); }
 
 static inline void regb(char pos){if (pos == 'u') { EDIT_BIN(0, '0'); EDIT_BIN(1, '0'); } else { EDIT_BIN(6, '0'); EDIT_BIN(7, '0'); }}
 static inline void rega(char pos){if (pos == 'u') { EDIT_BIN(0, '0'); EDIT_BIN(1, '1'); } else { EDIT_BIN(6, '0'); EDIT_BIN(7, '1'); }}
@@ -50,7 +50,7 @@ void asmtobin(const char *asm_str, FILE *output, const char type)
         return;
     }
 
-    if (!findArgs(asm_str, op))
+    if (findArgs(asm_str, op))
     {
         fprintf(stderr, "Invalid Argument %s\n", op);
         return;
@@ -84,14 +84,15 @@ static void findCommand(const char *asm_str, char op[6])
     else if (strcmp(op, "LOOP") == 0) op_loop();
     else if (strcmp(op, "STORE") == 0) op_store();
     else if (strcmp(op, "SET") == 0) op_set();
+    else if (strcmp(op, "PRINT") == 0) op_print();
     else if (strcmp(op, "END") == 0) bin[0] = '1';
     else op[0] = '\0';
 }
 
-static bool findArgs(const char *asm_str, const char *op)
+static int findArgs(const char *asm_str, const char *op)
 {
-    if (strcmp(op, "MOV") != 0 && strcmp(op, "SET") != 0 && strcmp(op, "LOOP") !=0)
-        return true;
+    if (strcmp(op, "MOV") != 0 && strcmp(op, "SET") != 0 && strcmp(op, "LOOP") !=0 && strcmp(op, "PRINT") !=0)
+        return 0;
 
     char args[64];
     snprintf(args, sizeof(args), "%s", asm_str);
@@ -103,17 +104,17 @@ static bool findArgs(const char *asm_str, const char *op)
     if (strcmp(op, "LOOP") == 0)
     {
         if (val == NULL || loc == NULL)
-            return false;
+            return 1;
 
         char *end_c, *end_s;
         long cloop = strtol(val, &end_c, 10);
         long sloop = strtol(loc, &end_s, 10);
 
         if (*end_c != '\0' || *end_s != '\0')
-            return false;
+            return 1;
 
         if (cloop < 0 || cloop > 7 || sloop < 0 || sloop > 6)
-            return false;
+            return 1;
 
         int cl = (int)cloop, sl = (int)sloop + 1;
 
@@ -123,7 +124,7 @@ static bool findArgs(const char *asm_str, const char *op)
         {
             free(bin_c);
             free(bin_s);
-            return false;
+            return 1;
         }
 
         bin[0] = bin_c[sizeof(int) * 8 - 3];
@@ -137,7 +138,21 @@ static bool findArgs(const char *asm_str, const char *op)
         free(bin_c);
         free(bin_s);
 
-        return true;
+        return 0;
+    }
+
+    if (strcmp(op, "PRINT") == 0)
+    {
+        if (val == NULL)
+            return 1;
+
+        if (strcmp(val, "REGA") == 0) rega('d');
+        else if (strcmp(val, "REGB") == 0) regb('d');
+        else if (strcmp(val, "MAR") == 0) mar('d');
+        else if (strcmp(val, "ACC") == 0) acc('d');
+        else return 1;
+        
+        return 0;
     }
 
     if (strcmp(op, "SET") == 0)
@@ -150,7 +165,7 @@ static bool findArgs(const char *asm_str, const char *op)
 
         bin[0] = ((loc[0] - '0') & 2) ? '1' : '0';
         bin[1] = ((loc[0] - '0') & 1) ? '1' : '0';
-        return true;
+        return 0;
     }
     if (strcmp(op, "LOOP") != 0)
     {
@@ -164,7 +179,7 @@ static bool findArgs(const char *asm_str, const char *op)
         else if (strcmp(loc, "MAR") == 0) mar('d');
         else if (strcmp(loc, "ACC") == 0) acc('d');
     }
-    return true;
+    return 0;
 }
 
 char *ntob(int n) 

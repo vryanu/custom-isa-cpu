@@ -1,5 +1,6 @@
 * "Hello, World!"
 * nums 72 101 108 108 111 44 32 87 111 114 108 100 33
+* [48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21]
 * 00 as select
 
 * Put values in RAM
@@ -230,7 +231,7 @@ STORE * pointer in 00 = 1 (REGB stays 1)
 LOAD * out = pointer
 MOV ACC REGA * REGA = pointer
 MOV ACC MAR * MAR = pointer
-LOAD * glitch makes this print idk why but it works
+PRINT ACC
 ADD * ACC = pointer+1
 SET MAR 0
 STORE * pointer in 00 += 1
@@ -241,7 +242,7 @@ LOOP 7 6 * repeat the last 7 commands, 7 runs total
 LOAD * out = pointer
 MOV ACC REGA * REGA = pointer
 MOV ACC MAR * MAR = pointer
-LOAD * print
+PRINT ACC
 ADD * ACC = pointer+1
 SET MAR 0
 STORE * pointer in 00 += 1
